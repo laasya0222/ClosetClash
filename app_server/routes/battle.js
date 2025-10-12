@@ -1,25 +1,8 @@
 var express = require('express');
 var router = express.Router();
+const ctrlBattle = require('../controllers/battle');
 
-// Hardcoded outfits for demo
-const outfits = [
-  {
-    id: 1,
-    image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f',
-    description: 'Red Dress with Heels'
-  },
-  {
-    id: 2,
-    image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c',
-    description: 'Casual Denim Look'
-  }
-];
-
-router.get('/', function(req, res, next) {
-  res.render('battle-arena', { 
-    title: 'Closet Clash: Battle Arena',
-    outfits 
-  });
-});
+/* GET battle page. */
+router.get('/', ctrlBattle.battle);
 
 module.exports = router;

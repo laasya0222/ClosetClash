@@ -3,7 +3,6 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const mongoose = require('mongoose');
 
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
@@ -11,69 +10,9 @@ var battleRouter = require('./app_server/routes/battle');
 var { router: closetRouter } = require('./app_server/routes/closet');
 var statsRouter = require('./app_server/routes/stats');
 var profileRouter = require('./app_server/routes/profile');
+require('./app_server/models/db');
 
 var app = express();
-
-// Determine the database URI
-// Use the environment variable on Render, otherwise use the local database
-const dbURI = process.env.DB_URI || 'mongodb://localhost:27017/ClosetClash';
-
-// Mongoose connection logic
-async function connectDB() {
-  try {
-    // Added options for modern Mongoose versions
-    await mongoose.connect(dbURI, {});
-  } catch (err) {
-    console.error(`Mongoose connection error: ${err}`);
-    // Exit process with failure
-    process.exit(1);
-  }
-}
-
-connectDB();
-
-// CONNECTION EVENTS
-mongoose.connection.on('connected', () => {
-  console.log(`Mongoose connected to ${dbURI}`);
-});
-
-mongoose.connection.on('error', err => {
-  console.log(`Mongoose connection error: ${err}`);
-});
-
-mongoose.connection.on('disconnected', () => {
-  console.log('Mongoose disconnected');
-});
-
-// CAPTURE APP TERMINATION / RESTART EVENTS
-// To be called when process is restarted or terminated
-const gracefulShutdown = (msg, callback) => {
-  mongoose.connection.close(() => {
-    console.log(`Mongoose disconnected through ${msg}`);
-    callback();
-  });
-};
-
-// For nodemon restarts
-process.once('SIGUSR2', () => {
-  gracefulShutdown('nodemon restart', () => {
-    process.kill(process.pid, 'SIGUSR2');
-  });
-});
-
-// For app termination
-process.on('SIGINT', () => {
-  gracefulShutdown('app termination', () => {
-    process.exit(0);
-  });
-});
-
-// For Render app termination
-process.on('SIGTERM', () => {
-  gracefulShutdown('Render app shutdown', () => {
-    process.exit(0);
-  });
-});
 
 // BRING IN YOUR SCHEMAS & MODELS
 // For example: require('./locations');
