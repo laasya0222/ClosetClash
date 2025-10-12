@@ -7,7 +7,7 @@ require('./app_server/models/db');
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
 var battleRouter = require('./app_server/routes/battle');
-var closetRouter = require('./app_server/routes/closet');
+var { router: closetRouter } = require('./app_server/routes/closet');
 var statsRouter = require('./app_server/routes/stats');
 var profileRouter = require('./app_server/routes/profile');
 

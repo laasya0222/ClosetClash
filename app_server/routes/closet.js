@@ -29,4 +29,7 @@ router.post('/upload', function(req, res, next) {
   res.redirect('/closet');
 });
 
-module.exports = router;
+module.exports = {
+  router,
+  outfits // Exporting for demo purposes in stats.js
+};
