@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  .container
+    h1.text-center #{title}
+    p.text-center Browse other users and see their style!
+    
+    if users && users.length > 0
+      .list-group
+        each user in users
+          if currentUser && user._id.toString() !== currentUser._id.toString()
+            a.list-group-item.list-group-item-action(href=`/users/profile/${user._id}`)= user.username || user.email
+    else
+      p.text-center No other users found.

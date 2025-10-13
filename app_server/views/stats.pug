@@ -1,0 +1,61 @@
+extends layout
+
+block content
+  .container
+    h1.text-center #{title}
+    
+    if !stats || stats.numOutfits === 0
+      p.text-center You don't have any stats yet. Upload some outfits to get started!
+    else
+      //- Stat Cards
+      .row.text-center.my-4
+        .col-md-3
+          .card.bg-light
+            .card-body
+              h5.card-title Total Outfits
+              p.card-text.display-4= stats.numOutfits
+        .col-md-3
+          .card.bg-light
+            .card-body
+              h5.card-title Overall Win Rate
+              - const overallWinRate = stats.totalBattles > 0 ? ((stats.totalWins / stats.totalBattles) * 100).toFixed(0) : 0
+              p.card-text.display-4 #{overallWinRate}%
+        .col-md-3
+          .card.bg-light
+            .card-body
+              h5.card-title Best Outfit
+              p.card-text.font-weight-bold= stats.bestOutfit.name
+              - const bestWinRate = stats.bestOutfit.winRate ? stats.bestOutfit.winRate.toFixed(0) : 0
+              p.text-success (#{bestWinRate}% Win Rate)
+        .col-md-3
+          .card.bg-light
+            .card-body
+              h5.card-title Most Liked
+              p.card-text.font-weight-bold= stats.mostLikedOutfit.name
+              p.text-danger
+                i.fas.fa-heart
+                |  #{stats.mostLikedOutfit.likes || 0}
+
+      //- Detailed Outfit Table
+      hr
+      h2.mt-4 Detailed Stats
+      .table-responsive
+        table.table.table-hover.align-middle
+          thead.thead-dark
+            tr
+              th Outfit
+              th Name
+              th Wins
+              th Battles
+              th Win Rate
+              th Likes
+          tbody
+            each outfit in outfits
+              tr
+                td
+                  img(src=outfit.image, alt=outfit.name, style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;")
+                td= outfit.name
+                td= outfit.wins || 0
+                td= outfit.battlesPlayed || 0
+                td #{outfit.winRate.toFixed(0)}%
+                td= outfit.likes || 0

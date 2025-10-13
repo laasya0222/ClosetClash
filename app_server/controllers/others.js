@@ -1,6 +1,6 @@
 /* GET 'home' page */
 const home = (req, res) => {
-  res.render('index', { title: 'ClosetClash' });
+  res.render('home', { title: 'Closet Clash' });
 };
 
 /* GET 'about' page */

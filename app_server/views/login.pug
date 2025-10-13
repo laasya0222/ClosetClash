@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  .row
+    .col-md-6.offset-md-3
+      h1.text-center Login
+      //- Div to display error messages from JavaScript
+      #error-message.alert.alert-danger(style="display: none;")
+      
+      form#login-form(method='POST')
+        .form-group
+          label(for='username') Username
+          input#username.form-control(type='text', name='username', required, oninput='document.getElementById("error-message").style.display="none"')
+        .form-group
+          label(for='password') Password
+          input#password.form-control(type='password', name='password', required, oninput='document.getElementById("error-message").style.display="none"')
+        .form-group
+          button.btn.btn-primary(type='submit') Login
+      .text-center.mt-3
+        a(href='/users/forgot') Forgot Password?
+      .text-center.mt-4
+        p Don't have an account? 
+          a(href="/users/register") Register here!

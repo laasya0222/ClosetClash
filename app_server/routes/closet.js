@@ -1,35 +1,18 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const { closet, upload, addLike, addComment } = require('../controllers/closet');
+const { isLoggedIn } = require('../controllers/auth');
 
-// Demo: hardcoded outfits array
-let outfits = [
-  {
-    id: 1,
-    name: 'Red Dress',
-    image: 'https://images.unsplash.com/photo-1512436991641-6745cdb1723f'
-  },
-  {
-    id: 2,
-    name: 'Denim Look',
-    image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c'
-  }
-];
+// All closet routes should be protected
+router.use(isLoggedIn);
 
 // GET closet page
-router.get('/', function(req, res, next) {
-  res.render('closet', { title: 'My Closet', outfits });
-});
+router.get('/', closet);
 
-// POST upload outfit (demo: just adds to array)
-router.post('/upload', function(req, res, next) {
-  const { name, image } = req.body;
-  if (name && image) {
-    outfits.push({ id: outfits.length + 1, name, image });
-  }
-  res.redirect('/closet');
-});
+// POST to upload a new outfit
+router.post('/upload', upload);
 
-module.exports = {
-  router,
-  outfits // Exporting for demo purposes in stats.js
-};
+router.post('/:outfitid/like', addLike);
+router.post('/:outfitid/comment', addComment);
+
+module.exports = router;

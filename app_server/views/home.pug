@@ -1,0 +1,64 @@
+extends layout
+
+block content
+  .landing-container
+    .hero
+      h1 Closet Clash
+      h2 👠✨ Virtual Wardrobe Battle & Outfit Voting
+      p.lead
+        | Think Tinder meets Fashion! Upload your looks, battle it out, and let the crowd decide your best outfit.
+    .cta-buttons
+      if currentUser
+        a.btn.btn-primary(href="/battle") Enter Battle Arena
+        a.btn.btn-secondary(href="/closet") Go to My Closet
+      else
+        a.btn.btn-success(href="/users/login") Login
+        a.btn.btn-info(href="/users/register") Register Now
+    .features
+      h3 Key Features
+      ul.feature-list
+        li
+          span.emoji 👗
+          |  Upload up to 2 outfits at once with tags (e.g., “date night,” “street style”)
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
+        li
+          span.emoji 🆚
+          |  Battle Arena: Vote on the best look in real-time
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
+        li
+          span.emoji 📊
+          |  Style Stats: See your wins and top trends
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
+        li
+          span.emoji 💬
+          |  Comments: Get tips & compliments
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
+        li
+          span.emoji 🔎
+          |  Filters: Event, gender, mood, and more
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
+    .how-it-works
+      h3 How It Works
+      ol
+        li Upload your outfits or looks
+        li Enter the Battle Arena and vote or get voted on
+        li Track your stats and improve your style
+    .unique
+      h3 What Makes Closet Clash Unique?
+      ul
+        li Crowd-driven styling & feedback
+        li No AI dependency – pure originality
+        li Fun, interactive, and social
+    .footer
+      p
+        | 🚀 Ready to clash? Join now and let your style shine!

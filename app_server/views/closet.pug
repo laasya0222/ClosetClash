@@ -1,0 +1,57 @@
+extends layout
+
+block content
+  .container
+    h1.text-center #{title}
+    .row
+      .col-md-8.offset-md-2
+        h3 Add a New Look
+        form(action='/closet/upload', method='POST')
+          .form-group
+            label(for='name') Outfit Name
+            input#name.form-control(type='text', name='name', required, placeholder='e.g., Summer Casual')
+          .form-group
+            label(for='image') Image URL
+            input#image.form-control(type='url', name='image', required, placeholder='https://example.com/image.jpg')
+          button.btn.btn-primary.mt-2(type='submit') Upload Outfit
+    hr
+    h2.mt-4 My Outfits
+    if outfits && outfits.length > 0
+      .row
+        each outfit in outfits
+          .col-md-6.mb-4
+            .card
+              img.card-img-top(src=outfit.image, alt=outfit.name, style="height: 400px; object-fit: cover;")
+              .card-body
+                h4.card-title= outfit.name
+                .d-flex.justify-content-around.mb-3
+                  .text-center
+                    strong Wins
+                    p.lead #{outfit.wins || 0}
+                  .text-center
+                    strong Likes
+                    p.lead.likes-count #{outfit.likes || 0}
+                
+                //- Like Button
+                form.like-form(action=`/closet/${outfit._id}/like`, method='POST' style="display: inline;")
+                  button.btn.btn-danger(type='submit')
+                    i.fas.fa-heart
+                    |  Like 
+
+                //- Comments Section
+                .mt-4
+                  h5 Comments
+                  if outfit.comments && outfit.comments.length > 0
+                    ul.list-group.list-group-flush
+                      each comment in outfit.comments
+                        li.list-group-item
+                          strong #{comment.authorEmail}:
+                          | #{comment.text}
+                  else
+                    p No comments yet.
+                  form.mt-2(action=`/closet/${outfit._id}/comment`, method='POST')
+                    .form-group
+                      input.form-control(type='text', name='text', placeholder='Add a comment...', required)
+                    button.btn.btn-secondary.btn-sm.mt-2(type='submit') Post Comment
+    else
+      p.text-center You haven't uploaded any outfits yet. Add one to get started!
