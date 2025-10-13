@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  .container
+    h1 Closet Clash: Battle Arena
+    .row
+      each outfit in outfits
+        .col-md-6.col-12(style="text-align:center;")
+          img(src=outfit.image, alt=outfit.description, style="max-width:100%;height:300px;")
+          h3= outfit.description
+          p Votes: 
+            span(id=`votes-${outfit.id}`) 0
+          button.btn.btn-success(onclick=`vote(${outfit.id})`) Vote
+
+  script(src="/socket.io/socket.io.js")
+  script.
+    const socket = io();
+
+    function vote(outfitId) {
+      socket.emit('vote', outfitId);
+    }
+
+    socket.on('update_votes', function(votes) {
+      for (const outfitId in votes) {
+        const voteElement = document.getElementById(`votes-${outfitId}`);
+        if (voteElement) {
+          voteElement.innerText = votes[outfitId];
+        }
+      }
+    });

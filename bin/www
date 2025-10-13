@@ -20,6 +20,31 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+var io = require('socket.io')(server);
+
+app.set('io', io);
+
+const votes = {
+  1: 0,
+  2: 0
+};
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+
+    socket.emit('update_votes', votes);
+
+    socket.on('vote', (outfitId) => {
+        if(votes.hasOwnProperty(outfitId)) {
+            votes[outfitId]++;
+            io.emit('update_votes', votes);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
+});
 
 /**
  * Listen on provided port, on all network interfaces.

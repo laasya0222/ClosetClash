@@ -8,26 +8,43 @@ block content
       p.lead
         | Think Tinder meets Fashion! Upload your looks, battle it out, and let the crowd decide your best outfit.
     .cta-buttons
-      a.btn.btn-primary(href="#") Sign Up
-      a.btn.btn-secondary(href="#") Log In
+      a.btn.btn-primary(href="/battle") Battle Arena
+      a.btn.btn-secondary(href="/closet") Closet
+      a.btn.btn-info(href="/stats") Stats
+      a.btn.btn-success(href="/profile") Profile
     .features
       h3 Key Features
       ul.feature-list
         li
           span.emoji 👗
           |  Upload up to 2 outfits at once with tags (e.g., “date night,” “street style”)
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
         li
           span.emoji 🆚
           |  Battle Arena: Vote on the best look in real-time
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
         li
           span.emoji 📊
           |  Style Stats: See your wins and top trends
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
         li
           span.emoji 💬
           |  Comments: Get tips & compliments
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
         li
           span.emoji 🔎
           |  Filters: Event, gender, mood, and more
+          button.btn.btn-outline-danger.btn-sm.like-btn
+            i.fas.fa-heart
+            span.likes-count 0
     .how-it-works
       h3 How It Works
       ol

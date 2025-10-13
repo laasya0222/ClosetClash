@@ -85,3 +85,7 @@
   color: #fff;
   background-color: #108a93;
  }
+
+.liked .fa-heart {
+  color: red;
+}
