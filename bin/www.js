@@ -29,7 +29,7 @@ var server = http.createServer(app);
 
 mongoose.connection.on('connected', () => {
   console.log('Database connected. Starting server...');
-  server.listen(port);
+  server.listen(port, '0.0.0.0'); // Listen on all available network interfaces
   server.on('error', onError);
   server.on('listening', onListening);
 });

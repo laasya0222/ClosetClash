@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
 const flash = require('connect-flash');
+const MongoStore = require('connect-mongo');
 const passport = require('passport');
 
 require('./app_server/models'); // This loads db, user, and outfit models
@@ -35,7 +36,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'a-fallback-secret-for-development',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+  cookie: { secure: 'auto' },
+  store: MongoStore.create({
+    mongoUrl: process.env.DB_URI
+  })
 }));
 
 // Use connect-flash for flash messages
