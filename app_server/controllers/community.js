@@ -8,7 +8,7 @@ const User = mongoose.model('User');
 const userList = async (req, res, next) => {
   try {
     // Find all users except for the currently logged-in user
-    const users = await User.find({ _id: { $ne: req.user._id } }).sort({ email: 1 });
+    const users = await User.find({ _id: { $ne: req.user._id } }).sort({ username: 1 });
     res.render('community', { title: 'Community', users: users });
   } catch (err) {
     next(err);

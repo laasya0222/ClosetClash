@@ -8,7 +8,7 @@ const home = async (req, res, next) => {
     const featuredOutfits = await Outfit.find({})
       .sort({ likes: -1 })
       .limit(3)
-      .populate('user', 'email'); // Get the owner's email
+      .populate('user', 'username'); // Get the owner's username
 
     res.render('home', {
       title: 'Closet Clash - Virtual Wardrobe Battle',
