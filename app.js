@@ -38,8 +38,8 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'a-fallback-secret-for-development',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: 'auto' }, // This is perfect for Render and localhost
-  store: MongoStore.create({ // Add this store configuration
+  cookie: { secure: 'auto' },
+  store: MongoStore.create({
     mongoUrl: process.env.DB_URI,
     collectionName: 'sessions'
   })
