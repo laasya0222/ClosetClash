@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
 const mongoose = require('mongoose');
-const Outfit = require('mongoose').model('Outfit');
+const Outfit = mongoose.model('Outfit');
 const { isLoggedIn } = require('../controllers/auth');
 
 router.get('/', isLoggedIn, async (req, res, next) => {
   try {
     // Find outfits belonging to the current user
-    const userOutfits = await Outfit.find({ user: req.user._id }).lean();
+    const userOutfits = await Outfit.find({ user: req.user._id });
     const numOutfits = userOutfits.length;
 
     if (numOutfits === 0) {
@@ -19,27 +19,34 @@ router.get('/', isLoggedIn, async (req, res, next) => {
 
     let totalWins = 0;
     let totalBattles = 0;
-    let bestOutfit = userOutfits[0];
-    let mostLikedOutfit = userOutfits[0];
+    let bestOutfit = null;
+    let mostLikedOutfit = null;
+    let bestWinRate = -1;
+    let maxLikes = -1;
 
     userOutfits.forEach(outfit => {
-      outfit.winRate = outfit.battlesPlayed > 0 ? (outfit.wins / outfit.battlesPlayed) * 100 : 0;
+      const winRate = outfit.battlesPlayed > 0 ? (outfit.wins / outfit.battlesPlayed) * 100 : 0;
+      // Since we are not using .lean(), we can't just add properties.
+      // We will handle this in the template or pass a transformed object if needed.
+      // For this fix, we'll calculate it on the fly.
+
       totalWins += outfit.wins || 0;
       totalBattles += outfit.battlesPlayed || 0;
 
-      const bestWinRate = bestOutfit.battlesPlayed > 0 ? (bestOutfit.wins / bestOutfit.battlesPlayed) * 100 : 0;
-      if (outfit.winRate > bestWinRate) {
+      if (winRate > bestWinRate) {
         bestOutfit = outfit;
+        bestWinRate = winRate;
       }
 
-      if ((outfit.likes || 0) > (mostLikedOutfit.likes || 0)) {
+      if ((outfit.likes || 0) > maxLikes) {
         mostLikedOutfit = outfit;
+        maxLikes = outfit.likes;
       }
     });
 
     res.render('stats', {
       title: 'My Style Stats',
-      outfits: userOutfits,
+      userOutfits: userOutfits.map(o => ({...o.toObject(), winRate: o.battlesPlayed > 0 ? (o.wins / o.battlesPlayed) * 100 : 0})),
       stats: { numOutfits, totalWins, totalBattles, bestOutfit, mostLikedOutfit }
     });
   } catch (err) {

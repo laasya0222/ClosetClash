@@ -1,40 +1,42 @@
 extends layout
 
 block content
-  .container
-    h1.text-center #{title}
-    #battle-arena
-      if battles && battles.length > 0
-        each battle, index in battles
-          .battle-container.mb-5(data-battle-id=index)
-            .row.justify-content-center
-              //- Outfit 1
-              .col-md-5.text-center.battle-card
-                img.outfit1-img.img-fluid.mb-3(src=battle[0].image, alt=battle[0].name, style="height: 300px; object-fit: cover;")
-                h4.outfit1-name= battle[0].name
-                p.outfit1-owner.text-muted by #{battle[0].owner[0].username}
+  #battle-arena.container
+    .row.mb-4
+      .col-12.text-center
+        h1.display-5= title
+        if battles.length === 0
+          p.lead.text-muted= message
+
+    if battles && battles.length > 0
+      each battle, index in battles
+        .battle-container(id=`battle-${index}`)
+          //- Outfit 1 (Left)
+          .col-md-5
+            .card.battle-card.text-center
+              img.img-fluid.mb-3(src=battle[0].image, alt=battle[0].name, style="height: 500px; object-fit: cover; border-radius: 0.5rem;")
+              .card-body
+                h4= battle[0].name
+                //- CORRECTED: Access owner.username directly
+                p.text-muted by #{battle[0].owner.username}
                 p.text-primary.fw-bold Wins: 
-                  span.outfit1-wins(id=`wins-${battle[0]._id}`) #{battle[0].wins || 0}
+                  span(id=`wins-${battle[0]._id}`) #{battle[0].wins || 0}
                 form.battle-form(action="/battle/vote", method="POST")
-                  input.outfit1-winner(type="hidden", name="winner", value=battle[0]._id)
-                  input.outfit1-loser(type="hidden", name="loser", value=battle[1]._id)
-                  button.btn.btn-success.btn-lg(type="submit") Vote for this look!
-      
-              //- VS Separator
-              .col-md-1.d-flex.align-items-center.justify-content-center
-                h2.font-weight-bold VS
-      
-              //- Outfit 2
-              .col-md-5.text-center.battle-card
-                img.outfit2-img.img-fluid.mb-3(src=battle[1].image, alt=battle[1].name, style="height: 300px; object-fit: cover;")
-                h4.outfit2-name= battle[1].name
-                p.outfit2-owner.text-muted by #{battle[1].owner[0].username}
+                  input(type="hidden", name="winner", value=battle[0]._id)
+                  input(type="hidden", name="loser", value=battle[1]._id)
+                  button.btn.btn-success.btn-lg(type="submit") Vote for this Look!
+
+          //- Outfit 2 (Right)
+          .col-md-5
+            .card.battle-card.text-center
+              img.img-fluid.mb-3(src=battle[1].image, alt=battle[1].name, style="height: 500px; object-fit: cover; border-radius: 0.5rem;")
+              .card-body
+                h4= battle[1].name
+                //- CORRECTED: Access owner.username directly
+                p.text-muted by #{battle[1].owner.username}
                 p.text-primary.fw-bold Wins: 
-                  span.outfit2-wins(id=`wins-${battle[1]._id}`) #{battle[1].wins || 0}
+                  span(id=`wins-${battle[1]._id}`) #{battle[1].wins || 0}
                 form.battle-form(action="/battle/vote", method="POST")
-                  input.outfit2-winner(type="hidden", name="winner", value=battle[1]._id)
-                  input.outfit2-loser(type="hidden", name="loser", value=battle[0]._id)
-                  button.btn.btn-success.btn-lg(type="submit") Vote for this look!
-            hr.mt-4
-      else
-        p.text-center= message
+                  input(type="hidden", name="winner", value=battle[1]._id)
+                  input(type="hidden", name="loser", value=battle[0]._id)
+                  button.btn.btn-success.btn-lg(type="submit") Vote for this Look!

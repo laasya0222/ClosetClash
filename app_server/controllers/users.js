@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
-const User = require('mongoose').model('User');
-const Outfit = require('mongoose').model('Outfit');
+const User = mongoose.model('User');
+const Outfit = mongoose.model('Outfit');
 
 // Handle user registration
 const register = async (req, res, next) => {
@@ -23,18 +23,21 @@ const register = async (req, res, next) => {
 
 // Handle user login
 const login = (req, res, next) => {
+  // Use passport.authenticate with a custom callback to handle AJAX requests
   passport.authenticate('local', (err, user, info) => {
-    if (err) { return res.status(500).json({ message: 'An internal server error occurred.' }); }
+    if (err) {
+      return res.status(500).json({ message: 'An internal server error occurred.' });
+    }
     if (!user) {
       // Authentication failed. Send back the error message from passport-local-mongoose.
-      // This is typically "Incorrect username" or "Incorrect password".
       return res.status(401).json({ message: info.message || 'Invalid credentials.' });
     }
+    // Authentication succeeded. Establish a session.
     req.logIn(user, (err) => {
       if (err) {
-        return res.status(500).json({ message: 'Login failed due to a server error.' });
+        return res.status(500).json({ message: 'Failed to establish a session.' });
       }
-      // Authentication successful. Send a success response with a redirect URL.
+      // Send a success response with the redirect path.
       return res.status(200).json({ redirectTo: '/closet' });
     });
   })(req, res, next);

@@ -1,6 +1,22 @@
+const mongoose = require('mongoose');
+const Outfit = mongoose.model('Outfit');
+
 /* GET 'home' page */
-const home = (req, res) => {
-  res.render('home', { title: 'Closet Clash' });
+const home = async (req, res, next) => {
+  try {
+    // Fetch top 3 most liked outfits to showcase on the homepage
+    const featuredOutfits = await Outfit.find({})
+      .sort({ likes: -1 })
+      .limit(3)
+      .populate('user', 'username'); // Get the owner's username
+
+    res.render('home', {
+      title: 'Closet Clash - Virtual Wardrobe Battle',
+      featuredOutfits: featuredOutfits
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 /* GET 'about' page */

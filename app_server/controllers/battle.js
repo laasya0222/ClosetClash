@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Outfit = require('mongoose').model('Outfit');
+const Outfit = mongoose.model('Outfit');
  
 const battle = async (req, res, next) => {
   try {
@@ -10,9 +10,24 @@ const battle = async (req, res, next) => {
       { $lookup: { from: 'users', localField: 'user', foreignField: '_id', as: 'owner' } }
     ]);
  
-    // Filter out any incomplete pairs to prevent errors
-    const completeBattles = availableOutfits
-      .reduce((acc, cur, i) => (i % 2 ? acc[acc.length - 1].push(cur) : acc.push([cur]), acc), [])
+    // 1. Filter out outfits without a valid owner and flatten the owner array to an object.
+    const validOutfits = availableOutfits
+      .filter(outfit => outfit.owner && outfit.owner.length > 0)
+      .map(outfit => {
+        outfit.owner = outfit.owner[0];
+        return outfit;
+      });
+
+    // 2. Create pairs of outfits for the battles.
+    const completeBattles = validOutfits
+      .reduce((acc, cur, i) => {
+        if (i % 2 === 0) {
+          acc.push([cur]);
+        } else {
+          acc[acc.length - 1].push(cur);
+        }
+        return acc;
+      }, [])
       .filter(pair => pair.length === 2);
 
     // If there are no complete battles, check if it's because the user has voted on everything

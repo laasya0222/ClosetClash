@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Outfit = require('mongoose').model('Outfit');
+const Outfit = mongoose.model('Outfit');
 
 const closet = async (req, res, next) => {
   try {

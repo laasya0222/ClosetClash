@@ -71,9 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const data = Object.fromEntries(formData.entries());
 
         try {
-          // --- New, more robust logic ---
-          const outfit1Id = battleContainer.querySelector('.outfit1-winner').value;
-
           const response = await fetch('/battle/vote', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

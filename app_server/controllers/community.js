@@ -1,19 +1,18 @@
 const mongoose = require('mongoose');
-const User = require('mongoose').model('User');
+const User = mongoose.model('User');
 
+/**
+ * GET /community
+ * Display a list of all users.
+ */
 const userList = async (req, res, next) => {
   try {
-    // Find all users, but only select their email to display
-    const users = await User.find().select('username email _id').lean();
-    res.render('community', {
-      title: 'Community',
-      users: users
-    });
+    // Find all users except for the currently logged-in user
+    const users = await User.find({ _id: { $ne: req.user._id } }).sort({ username: 1 });
+    res.render('community', { title: 'Community', users: users });
   } catch (err) {
     next(err);
   }
 };
 
-module.exports = {
-  userList
-};
+module.exports = { userList };

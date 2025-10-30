@@ -1,15 +1,15 @@
 require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
+const flash = require('connect-flash');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 
-require('./app_server/models');
-
+require('./app_server/models'); // This loads db, user, and outfit models
+const path = require('path'); // Ensure path is required
+const User = require('mongoose').model('User'); // Get the User model after it's registered
 var indexRouter = require('./app_server/routes/index');
 var usersRouter = require('./app_server/routes/users');
 var battleRouter = require('./app_server/routes/battle');
@@ -18,9 +18,6 @@ var communityRouter = require('./app_server/routes/community');
 var statsRouter = require('./app_server/routes/stats');
 
 var app = express();
-
-// BRING IN YOUR SCHEMAS & MODELS
-const User = require('mongoose').model('User');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'app_server', 'views'));
@@ -31,6 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// Link the new stylesheet
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
@@ -39,6 +37,9 @@ app.use(session({
   saveUninitialized: true,
   cookie: { secure: process.env.NODE_ENV === 'production' }
 }));
+
+// Use connect-flash for flash messages
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -49,6 +50,13 @@ app.use((req, res, next) => {
   next();
 });
 
+// This middleware makes flash messages available in all templates
+app.use((req, res, next) => {
+  res.locals.messages = req.flash();
+  next();
+});
+
+// Configure Passport to use the strategy provided by passport-local-mongoose
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());

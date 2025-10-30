@@ -19,8 +19,7 @@ const outfitSchema = new mongoose.Schema({
   battlesPlayed: { type: Number, default: 0 },
   likes: { type: Number, default: 0 },
   voters: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  comments: [commentSchema],
-  createdAt: { type: Date, default: Date.now }
-});
+  comments: [commentSchema]
+}, { timestamps: true }); // Using timestamps option for createdAt and updatedAt
 
 mongoose.model('Outfit', outfitSchema);

@@ -35,7 +35,9 @@ mongoose.connection.on('connected', () => {
 });
 
 mongoose.connection.on('error', (err) => {
-  console.error('Database connection error. Server not started.', err);
+  // This will catch errors after the initial connection, but we also have
+  // the initial connection handler in db.js. This is a good fallback.
+  console.error('A database connection error occurred. Server not started.', err);
   process.exit(1);
 });
 
