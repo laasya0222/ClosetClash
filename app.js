@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const session = require('express-session');
 const flash = require('connect-flash');
-const MongoStore = require('connect-mongo');
+const MongoStore = require('connect-mongo'); // Add this line
 const passport = require('passport');
 
 require('./app_server/models'); // This loads db, user, and outfit models
@@ -38,9 +38,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'a-fallback-secret-for-development',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: 'auto' },
-  store: MongoStore.create({
-    mongoUrl: process.env.DB_URI
+  cookie: { secure: 'auto' }, // This is perfect for Render and localhost
+  store: MongoStore.create({ // Add this store configuration
+    mongoUrl: process.env.DB_URI,
+    collectionName: 'sessions'
   })
 }));
 
