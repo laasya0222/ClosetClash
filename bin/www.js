@@ -29,15 +29,13 @@ var server = http.createServer(app);
 
 mongoose.connection.on('connected', () => {
   console.log('Database connected. Starting server...');
-  server.listen(port, '0.0.0.0'); // Listen on all available network interfaces
+  server.listen(port, '0.0.0.0'); // Listen on all available network interfaces for Render
   server.on('error', onError);
   server.on('listening', onListening);
 });
 
 mongoose.connection.on('error', (err) => {
-  // This will catch errors after the initial connection, but we also have
-  // the initial connection handler in db.js. This is a good fallback.
-  console.error('A database connection error occurred. Server not started.', err);
+  console.error('Database connection error. Server not started.', err);
   process.exit(1);
 });
 
