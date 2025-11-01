@@ -10,8 +10,10 @@ const register = async (req, res, next) => {
   try {
     // User.register is a static method from passport-local-mongoose
     // It handles hashing and saving the user in one step.
-    const user = new User({ username: username, email: email });
-    await User.register(user, password);
+    // The first argument to User.register is the user object, which must contain
+    // the username field (which we've configured to be 'email').
+    const user = new User({ email: email, username: username });
+    await User.register(user, password); // The password is the second argument.
     // After successful registration, log the user in and redirect.
     req.login(user, (err) => {
       if (err) return next(err);
@@ -19,7 +21,12 @@ const register = async (req, res, next) => {
     });
   } catch (err) {
     console.error(err);
-    res.render('register', { title: 'Register', error: err.message });
+    res.render('register', {
+      title: 'Register',
+      error: err.message,
+      username: username, // Pass back the username
+      email: email // Pass back the email
+    });
   }
 };
 
